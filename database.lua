@@ -59,7 +59,7 @@ local valoresCompetencias = {
 }
 
 
-createDatabase()
+--createDatabase()
 
 
 function insertarrCompetencias( param )
@@ -161,4 +161,4 @@ end
 
 
 
-iniciarBaseDeDatos()
+--iniciarBaseDeDatos()

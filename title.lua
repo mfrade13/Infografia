@@ -13,6 +13,10 @@ local _H = display.contentHeight
 -- forward declaration
 local background, pageText
 local alumnos = {}
+local imagePath = "src/assets/"
+
+
+local first,second,third, first_mame, second_name, third_name
 -- Touch listener function for background object
 local function onBackgroundTouch( self, event )
 	if event.phase == "ended" or event.phase == "cancelled" then
@@ -63,6 +67,26 @@ function scene:create( event )
 	local score = display.newText(sceneGroup, "Puntaje", box2.x, inicioTablaY,"arial",20)
 	score:setFillColor(1,0,0)
 
+
+	local podio = display.newLine(sceneGroup, _W/2 -50, _H/2+80, _W/2+100, _H/2+80)
+	podio:append(_W/2+100,_H/2, _W/2+250,_H/2,_W/2+250,_H/2+100,_W/2+400,_H/2+100)
+	podio:append(_W/2+400,_H/2+240,_W/2 - 50,_H/2+240,_W/2 -50,_H/2+80 )
+	podio:setStrokeColor(1)
+	podio.strokeWidth = 3
+
+	first = display.newImageRect(sceneGroup, imagePath.. "oro.png", 150, 150)
+	first.x = _W/2+ 175
+	first.y = _H/2 + 80
+
+	second = display.newImageRect(sceneGroup, imagePath.. "plata.png", 140, 140)
+	second.x = _W/2+ 30
+	second.y = _H/2 + 160
+
+	third = display.newImageRect(sceneGroup, imagePath.. "Bronce.png", 120, 120)
+	third.x = _W/2+ 330
+	third.y = _H/2 + 180
+
+
 	-- Add more text
 	
 	-- all display objects must be inserted into group
@@ -98,6 +122,9 @@ function scene:show( event )
 			local score = display.newText(sceneGroup,"".. alumnos[i].score, box2.x, inicioTablaY +(i*40),"arial",20)
 			score:setFillColor(1,0,0)
 		end
+
+
+		
 		-- background.touch = onBackgroundTouch
 		-- background:addEventListener( "touch", background )
 	end
