@@ -41,13 +41,14 @@ end
 
 
 local participantes = {
-	{name="Priscila Ando", score=100},
-	{name="Valeria Succi", score=80},
-	{name="Rosa Zambrana ", score=94},
-	{name="Ricardo Perez", score=66},
-	{name="Pedro Salazar", score=22},
-	{name="Sergio Marzana", score=99},
-	{name="Diego Rivera", score=45}
+	{name="Priscila Ando", score=0},
+	{name="Valeria Succi", score=00},
+	{name="Rosa Zambrana ", score=0},
+	{name="Sergio Perez", score=1},
+	{name="Sergio Bellot", score=2},
+	{name="Sergio Marzana", score=1},
+	{name="Paola Rivas", score=0},
+	{name="Luis Choque", score=0}
 }
 
 local valoresCompetencias = {

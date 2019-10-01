@@ -41,6 +41,10 @@ function scene:create( event )
 	-- INSERT code here to initialize the scene
 	-- e.g. add display objects to 'sceneGroup', add touch listeners, etc.
 
+	local gradient = {
+    type="gradient",
+    color1={ 1, 0.8, 1 }, color2={ 0.2, 0.1 , 0.2 }, direction="down"
+	}
 	-- display a background image
 --	background = display.newImageRect( sceneGroup, "cover.jpg", display.contentWidth, display.contentHeight )
 	background = display.newRect(0,0,_W,_H)
@@ -48,15 +52,18 @@ function scene:create( event )
 	background.anchorY = 0
 	background.x, background.y = 0, 0
 	background:setFillColor(0.45,0.25,012,0.43)
-	sceneGroup:insert( background )
+--	background:setFillColor(gradient)
+		sceneGroup:insert( background )
+
 
 	local titulo = display.newText(sceneGroup, "INFOGRAFIA", _W/2,_H/4,system.nativeFont, 50 ) 
+	titulo:setTextColor(gradient)
 
 	local encabezado = display.newRect(sceneGroup, 150,inicioTablaY ,220,30)
 	encabezado:setFillColor(0)
 	encabezado:setStrokeColor(1)
 	encabezado.strokeWidth=3
-	local texto = display.newText(sceneGroup,"Alumno", 150,inicioTablaY,"arial",20)
+	local texto = display.newText(sceneGroup,"ALUMNO", 150,inicioTablaY,"arial",20)
 	texto:setFillColor(1,0,0)
 	
 	local box2 = display.newRect(sceneGroup, 150+encabezado.x, inicioTablaY ,80,30)
