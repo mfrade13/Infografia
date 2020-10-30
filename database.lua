@@ -17,10 +17,9 @@ function createDatabase( )
 	 db = sqlite3.open( path ) 
 	 -- creacion de tablas
 
-	 local table1 = "create table if not exists " .. jugadores .. "(id_jugador integer PRIMARY KEY AUTOINCREMENT, name VARCHAR(50), score integer(60) );"
+	 local table1 = "create table if not exists " .. jugadores .. "(id_jugador integer PRIMARY KEY AUTOINCREMENT, name VARCHAR(50), score integer(60), avatar VARCHAR(50) );"
 	 local table2 = "create table if not exists " .. competencias .. "(id_competencia integer PRIMARY KEY AUTOINCREMENT, name VARCHAR(50) );"
-	 local table3 = "create table if not exists " .. rendimiento .. "(id_rendimiento integer PRIMARY KEY AUTOINCREMENT, id_competencia integer, id_alumno integer, score integer(60) );"
-
+	 local table3 = "create table if not exists " .. rendimiento .. "(id_rendimiento integer PRIMARY KEY AUTOINCREMENT, id_competencia integer, id_jugador integer, score integer(4) );"
 
 	 db:exec( table1)
 	 db:exec( table2)
@@ -31,45 +30,72 @@ end
 
 function addParticipante( params )
 	db = sqlite3.open( path ) 
-	print(params)
-	local query = "INSERT INTO " .. jugadores .. " (name, score) VALUES ('".. params.name .. "', " .. params.score .. ");"
-	
+--	print(params)
+	local query = "INSERT INTO " .. jugadores .. " (name, score, avatar) VALUES ('".. params.name .. "', " .. params.score .. ",'".. params.avatar.."');"
 	db:exec(query)
-	print("executed")
+--	print("executed")
 	db:close()	
 end
 
 
-local participantes = {
-	{name="Priscila Ando", score=0},
-	{name="Valeria Succi", score=00},
-	{name="Rosa Zambrana ", score=0},
-	{name="Sergio Perez", score=1},
-	{name="Sergio Bellot", score=2},
-	{name="Sergio Marzana", score=1},
-	{name="Paola Rivas", score=0},
-	{name="Luis Choque", score=0}
+-- local participantes = {
+-- 	{name="Benjamin Soto", score=0, avatar = 'benjamin.jpg' },
+-- 	{name="Valeria Succi", score=0, avatar = 'vale.png'},
+-- 	{name="Rosa Zambrana ", score=0,avatar = 'vale.png' },
+-- 	{name="Sergio Perez", score=0, avatar = 'vale.png' },
+-- 	{name="Sergio Bellot", score=0, avatar = 'vale.png'},
+-- 	{name="Sergio Marzana", score=0, avatar = 'vale.png'},
+-- 	{name="Paola Rivas", score=0, avatar = 'vale.png'},
+-- 	{name="Luis Choque", score=0, avatar = 'vale.png'}
+-- }
+
+local alumnos = {
+    {name="MAURICIO A.", score=0, avatar = 'default.jpg' },
+	{name="PATRICK", score=0, avatar = 'default.jpg' },
+	{name="ROBERTO", score=0, avatar = 'default.jpg' },
+	{name="IGNACIO", score=0, avatar = 'default.jpg' },
+	{name="KEN", score=0, avatar = 'default.jpg' },
+	{name="CESAR", score=0, avatar = 'default.jpg' },
+	{name="PAOLO", score=0, avatar = 'default.jpg' },
+	{name="SERGIO", score=0, avatar = 'default.jpg' },
+	{name="JORGE", score=0, avatar = 'default.jpg' },
+	{name="ERICK", score=0, avatar = 'default.jpg' },
+	{name="FERNANDA", score=0, avatar = 'default.jpg' },
+	{name="NURIA", score=0, avatar = 'default.jpg' },
+	{name="RAISA", score=0, avatar = 'default.jpg' },
+	{name="WEIMAR", score=0, avatar = 'default.jpg' },
+	{name="MAURICIO V.", score=0, avatar = 'default.jpg' }
 }
+
 
 local valoresCompetencias = {
-	{'parcipacion'},
-	{'puntualidad'},
-	{'conocimientos_previos'},
-	{'conocimientos_nuevos'},
-	{'colaboracion'},
+	'parcipacion',
+	'puntualidad',
+	'conocimientos_previos',
+	'conocimientos_nuevos',
+	'colaboracion',
+	'corregir_al_docente',
+	'ayudar-compañero',
+	'curioso_impaciente'
 }
-
-
---createDatabase()
 
 
 function insertarrCompetencias( param )
 	db = sqlite3.open( path )
-	print(param)
+	--print(param)
 	local sql =  "INSERT into " .. competencias .. " (name) VALUES ('" ..param .." ')"
 	db:exec(sql)
 	db:close()
 end
+
+function insertarrRendimiento( competencia, jugador )
+	db = sqlite3.open( path )
+--	print(competencia,jugador)
+	local sql =  "INSERT into " .. rendimiento .. " (id_competencia, id_jugador,score) VALUES (" ..competencia ..",  " .. jugador .. ",0 )"
+	db:exec(sql)
+	db:close()
+end
+
 
 function cargarParticipantes(  )
 	db = sqlite3.open( path ) 
@@ -78,8 +104,7 @@ function cargarParticipantes(  )
 	local k = 1
 	print("starting look")
 	for row in db:nrows(query) do
-		print(row.name)
-		participantes[k] = {id = row.id_jugador, name=row.name, score = row.score}
+		participantes[k] = {id = row.id_jugador, name=row.name, score = row.score, avatar = row.avatar}
 		k = k+1
 	end
 
@@ -89,15 +114,23 @@ end
 
 
 
+
 function iniciarBaseDeDatos(  )
-	for i=1,#participantes do
-		addParticipante(participantes[i])
+	for i=1,#alumnos do
+		addParticipante(alumnos[i])
 	end
 
 	for i=1,#valoresCompetencias do
-		print(valoresCompetencias[i][1])
-		insertarrCompetencias(valoresCompetencias[i][1])
+--		print(valoresCompetencias[i])
+		insertarrCompetencias(valoresCompetencias[i])
 	end
+
+	for i=1,#alumnos do
+		for j=1,#valoresCompetencias do
+			insertarrRendimiento(j,i)
+		end
+	end
+
 
 end
 
@@ -109,7 +142,7 @@ function obtenerJugador( id )
 	local query = "SELECT * FROM " .. jugadores .. " WHERE id_jugador = " .. id .. ""; 
 
 	for x in db:nrows(query) do
-		jugador = {id_jugador = x.id_jugador, name = x.name, score = x.score}
+		jugador = {id_jugador = x.id_jugador, name = x.name, score = x.score, avatar= x.avatar}
 	end
 		
 	db:close()
@@ -161,5 +194,24 @@ function crearRendimiento(  )
 end
 
 
+function getAchievements( jugador )
+	
+	db = sqlite3.open( path ) 
+	achivements = {}
+	local query = "SELECT * FROM " .. rendimiento .. " JOIN ".. competencias .. " WHERE id_jugador = " ..  jugador .. 
+	" and rendimiento.id_competencia = competencias.id_competencia ;"
+	local k = 1
+	print("starting look")
+	for row in db:nrows(query) do
+		achivements[k] = {id_jugador = row.id_jugador, id_competencia=row.id_competencia, score = row.score, competencia=row.name}
+		k = k+1
+	end
 
---iniciarBaseDeDatos()
+	db:close()	
+	return achivements
+end
+
+
+
+-- createDatabase()
+-- iniciarBaseDeDatos()
